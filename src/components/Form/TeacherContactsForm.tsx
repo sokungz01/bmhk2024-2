@@ -1,17 +1,12 @@
-import { Form, FormInstance, Typography } from 'antd'
-import { customizeRequiredMark } from '../../lib/antdForm'
-import Input from './Input/Input'
+import { Form, Typography } from 'antd'
 import { ITeamTeacherForm } from '../../interfaces/user.interface'
+import Input from './Input/Input'
 
-interface Props {
-  form: FormInstance<ITeamTeacherForm>
-}
-
-export default function TeacherContactsForm({ form }: Props) {
+export default function TeacherContactsForm() {
   const { Text } = Typography
 
   return (
-    <Form form={form} layout="vertical" requiredMark={customizeRequiredMark} scrollToFirstError>
+    <>
       <div>
         <div className="rounded-t-md bg-primary-200 p-3">
           <Text className="font-normal text-text_color-100 text-lg">ข้อมูลติดต่อ</Text>
@@ -24,7 +19,11 @@ export default function TeacherContactsForm({ form }: Props) {
               </Form.Item>
             </div>
             <div className="w-full p-4 md:w-1/2 lg:w-1/3">
-              <Form.Item<ITeamTeacherForm> label="เบอร์โทรศัพท์" name="advisorContactPhone" rules={[{ required: true }]}>
+              <Form.Item<ITeamTeacherForm>
+                label="เบอร์โทรศัพท์"
+                name="advisorContactPhone"
+                rules={[{ required: true }]}
+              >
                 <Input title="เบอร์โทรศัพท์" required={true} placeholder="0812345678" />
               </Form.Item>
             </div>
@@ -36,6 +35,6 @@ export default function TeacherContactsForm({ form }: Props) {
           </div>
         </div>
       </div>
-    </Form>
+    </>
   )
 }

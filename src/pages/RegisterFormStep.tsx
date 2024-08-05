@@ -23,6 +23,8 @@ const RegisterFormStep: React.FC = () => {
     const fetchData = async () => {
       const response = await axiosInstance.get('/api/auth/me')
       const data = response.data as IUser
+      console.log(data)
+
       setMembers(data.member)
       formTeamTeacherStepForm.setFieldsValue({
         ...(data as ITeamTeacherForm),
@@ -40,6 +42,7 @@ const RegisterFormStep: React.FC = () => {
         memberLastnameEN: data.member1LastnameEN,
         memberNickname: data.member1Nickname,
         memberGradeLevel: data.member1GradeLevel,
+        memberFoodPreference: data.member1FoodPreference,
         memberFoodAllergy: data.member1FoodAllergy,
         memberDrugAllergy: data.member1DrugAllergy,
         memberChronicDisease: data.member1ChronicDisease,
@@ -53,6 +56,7 @@ const RegisterFormStep: React.FC = () => {
         // memberDocumentIDCard: values.member1DocumentIDCard,
         // memberDocumentPorPor7: values.member1DocumentPorPor7
       })
+
       formParticipant2StepForm.setFieldsValue({
         memberPrefixTH: data.member2PrefixTH,
         memberPrefixEN: data.member2PrefixEN,
@@ -64,6 +68,7 @@ const RegisterFormStep: React.FC = () => {
         memberLastnameEN: data.member2LastnameEN,
         memberNickname: data.member2Nickname,
         memberGradeLevel: data.member2GradeLevel,
+        memberFoodPreference: data.member2FoodPreference,
         memberFoodAllergy: data.member2FoodAllergy,
         memberDrugAllergy: data.member2DrugAllergy,
         memberChronicDisease: data.member2ChronicDisease,
@@ -77,6 +82,7 @@ const RegisterFormStep: React.FC = () => {
         // memberDocumentIDCard: values.member1DocumentIDCard,
         // memberDocumentPorPor7: values.member1DocumentPorPor7
       })
+
       formParticipant3StepForm.setFieldsValue({
         memberPrefixTH: data.member3PrefixTH,
         memberPrefixEN: data.member3PrefixEN,
@@ -88,6 +94,7 @@ const RegisterFormStep: React.FC = () => {
         memberLastnameEN: data.member3LastnameEN,
         memberNickname: data.member3Nickname,
         memberGradeLevel: data.member3GradeLevel,
+        memberFoodPreference: data.member3FoodPreference,
         memberFoodAllergy: data.member3FoodAllergy,
         memberDrugAllergy: data.member3DrugAllergy,
         memberChronicDisease: data.member3ChronicDisease,
@@ -142,32 +149,24 @@ const RegisterFormStep: React.FC = () => {
     updateStage()
   }, [members, page])
 
-  const PageSwither = () => {
-    switch (page) {
-      case 1:
-        return <TeamTeacherStepForm form={formTeamTeacherStepForm} setMembers={setMembers} />
-      case 2:
-        return <ParticipantStepForm form={formParticipant1StepForm} nth={1} />
-      case 3:
-        return <ParticipantStepForm form={formParticipant2StepForm} nth={2} />
-      case 4:
-        return <ParticipantStepForm form={formParticipant3StepForm} nth={3} />
-      default:
-        return <></>
-    }
-  }
-
   const handlePrevious = () => {
     setPage(page === 1 ? 1 : page - 1)
   }
   const handleNext = async () => {
     try {
       if (page === 1) {
+        try {
+          await formTeamTeacherStepForm.validateFields()
+        } catch (error: any) {
+          formTeamTeacherStepForm.scrollToField(error.errorFields[0].name, {
+            behavior: 'smooth'
+          })
+          throw error
+        }
         await formTeamTeacherStepForm.validateFields()
         // Validate File
 
         const values = await formTeamTeacherStepForm.getFieldsValue()
-        console.log(values)
         // Uploadfile
 
         // Patch Team Teacher
@@ -197,7 +196,14 @@ const RegisterFormStep: React.FC = () => {
 
         // console.log(response)
       } else if (page === 2) {
-        await formParticipant1StepForm.validateFields()
+        try {
+          await formParticipant1StepForm.validateFields()
+        } catch (error: any) {
+          formParticipant1StepForm.scrollToField(error.errorFields[0].name, {
+            behavior: 'smooth'
+          })
+          throw error
+        }
         // Validate File
 
         const values = await formParticipant1StepForm.getFieldsValue()
@@ -215,6 +221,7 @@ const RegisterFormStep: React.FC = () => {
           member1LastnameEN: values.memberLastnameEN,
           member1Nickname: values.memberNickname,
           member1GradeLevel: values.memberGradeLevel,
+          member1FoodPreference: values.memberFoodPreference,
           member1FoodAllergy: values.memberFoodAllergy,
           member1DrugAllergy: values.memberDrugAllergy,
           member1ChronicDisease: values.memberChronicDisease,
@@ -229,9 +236,15 @@ const RegisterFormStep: React.FC = () => {
           // member1DocumentPorPor7: values.memberDocumentPorPor7
         })
       } else if (page === 3) {
-        await formParticipant2StepForm.validateFields()
+        try {
+          await formParticipant2StepForm.validateFields()
+        } catch (error: any) {
+          formParticipant2StepForm.scrollToField(error.errorFields[0].name, {
+            behavior: 'smooth'
+          })
+          throw error
+        }
         const values = await formParticipant2StepForm.getFieldsValue()
-        console.log(values)
         // Uploadfile
 
         // Patch member 2
@@ -245,6 +258,7 @@ const RegisterFormStep: React.FC = () => {
           member2LastnameTH: values.memberLastnameTH,
           member2LastnameEN: values.memberLastnameEN,
           member2Nickname: values.memberNickname,
+          member2FoodPreference: values.memberFoodPreference,
           member2GradeLevel: values.memberGradeLevel,
           member2FoodAllergy: values.memberFoodAllergy,
           member2DrugAllergy: values.memberDrugAllergy,
@@ -260,7 +274,14 @@ const RegisterFormStep: React.FC = () => {
           // member1DocumentPorPor7: values.memberDocumentPorPor7
         })
       } else if (page === 4 && members === 3) {
-        await formParticipant3StepForm.validateFields()
+        try {
+          await formParticipant3StepForm.validateFields()
+        } catch (error: any) {
+          formParticipant3StepForm.scrollToField(error.errorFields[0].name, {
+            behavior: 'smooth'
+          })
+          throw error
+        }
         const values = await formParticipant3StepForm.getFieldsValue()
         // Uploadfile
 
@@ -276,6 +297,7 @@ const RegisterFormStep: React.FC = () => {
           member3LastnameEN: values.memberLastnameEN,
           member3Nickname: values.memberNickname,
           member3GradeLevel: values.memberGradeLevel,
+          member3FoodPreference: values.memberFoodPreference,
           member3FoodAllergy: values.memberFoodAllergy,
           member3DrugAllergy: values.memberDrugAllergy,
           member3ChronicDisease: values.memberChronicDisease,
@@ -292,8 +314,8 @@ const RegisterFormStep: React.FC = () => {
       }
 
       setPage(page === members + 1 ? members + 1 : page + 1)
-    } catch {
-      console.log('error')
+    } catch (error) {
+      console.log(error)
     }
   }
 
@@ -311,7 +333,10 @@ const RegisterFormStep: React.FC = () => {
             <h1 className="text-text_color-100 font-heading text-[40px] font-normal text-center py-2">REGISTRATION</h1>
           </header>
           <div className={`pb-4 page-container ${transitionClass}`}>
-            {PageSwither()}
+            {page === 1 && <TeamTeacherStepForm form={formTeamTeacherStepForm} setMembers={setMembers} />}
+            {page === 2 && <ParticipantStepForm form={formParticipant1StepForm} nth={1} />}
+            {page === 3 && <ParticipantStepForm form={formParticipant2StepForm} nth={2} />}
+            {page === 4 && <ParticipantStepForm form={formParticipant3StepForm} nth={3} />}
             <PageChanger
               handlePrevious={handlePrevious}
               handleNext={handleNext}
